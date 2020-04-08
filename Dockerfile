@@ -47,8 +47,9 @@ RUN mv phpMyAdmin-4.9.1-english phpmyadmin
 COPY ./srcs/config.inc.php phpmyadmin
 
 WORKDIR /var/www/html
-RUN mkdir example
-RUN echo "<?php \n echo 'salut';" > /var/www/html/example/index.php
+RUN rm -rf index*
+COPY ./srcs/index.html /var/www/html/index.html
+
 
 RUN wget https://wordpress.org/latest.tar.gz
 RUN mv latest.tar.gz wordpress.tar.gz && tar -zxvf wordpress.tar.gz && rm -rf wordress.tar.gz
@@ -66,18 +67,24 @@ CMD service nginx start ; \
 
 EXPOSE 80 443
 
+# POUR LANCER LE CONTAINER :
+# VERIFIER QUE RIEN NE TOURNE SUR LES PORTS 80 et 443, souvent c'est Nginx ou apache
+# systemctl stop nginx
+# docker build . -t eval_server:1
+# docker run -p 80:80 -p 443:443 -d eval_server:1
 
+# POUR MODIFIER L INDEX :
+# docker exec -it ID_CONTAINER /bin/bash
+# et modifier le fichier index.html
+
+# NOTES POUR MOI MEME
 
 # docker image prune
 # docker container prune
-
 # docker exec it CONTAINER_ID bash
-
 # docker run --detach  :: Run container in background and print container id
-# docker run -p  80:80 -d IMAGE_ID
+# docker run -p  80:80 -p 443:443 -d IMAGE_ID
 # docker stop container_id
 # ps
 # images
-
 # ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (2)
-# 
