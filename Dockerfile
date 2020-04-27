@@ -12,6 +12,8 @@
 
 FROM debian:buster
 
+ENV INDEX on
+
 RUN apt-get -y update && apt-get -y upgrade
 
 # tools + LEMP
@@ -49,7 +51,7 @@ COPY ./srcs/config.inc.php phpmyadmin
 WORKDIR /var/www/html
 RUN rm -rf index*
 COPY ./srcs/index.html /var/www/html/index.html
-
+COPY ./srcs/files /var/www/html/files
 
 RUN wget https://wordpress.org/latest.tar.gz
 RUN mv latest.tar.gz wordpress.tar.gz && tar -zxvf wordpress.tar.gz && rm -rf wordress.tar.gz
@@ -60,6 +62,7 @@ RUN chmod 755 -R *
 
 
 COPY ./srcs/default /etc/nginx/sites-available/default
+RUN sed -i "s/XXXXX/autoindex $INDEX;/g" /etc/nginx/sites-available/default
 CMD service nginx start ; \
     service php7.3-fpm start ; \
     service mysql start ; \

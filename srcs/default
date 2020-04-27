@@ -19,6 +19,10 @@ server {
 
         server_name localhost www.localhost;
 
+		location / {
+		XXXXX
+		}
+
         location ~ \.php$ {
                 include snippets/fastcgi-php.conf;
                 fastcgi_pass unix:/run/php/php7.3-fpm.sock;
