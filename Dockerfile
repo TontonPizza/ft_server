@@ -60,7 +60,7 @@ RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 -subj '/C=FR/ST=75/L=Par
 RUN chown -R www-data:www-data *
 RUN chmod 755 -R *
 
-
+COPY ./srcs/wp-config.php /var/www/html/wordpress/wp-config.php
 COPY ./srcs/default /etc/nginx/sites-available/default
 RUN sed -i "s/XXXXX/autoindex $INDEX;/g" /etc/nginx/sites-available/default
 CMD service nginx start ; \
