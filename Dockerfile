@@ -1,7 +1,5 @@
 FROM debian:buster
 
-ENV INDEX on
-
 RUN apt-get -y update && apt-get -y upgrade
 
 # tools + LEMP
@@ -13,7 +11,6 @@ RUN	apt-get install -y nginx
 RUN apt-get install -y mariadb-server mariadb-client
 RUN apt-get install -y php-fpm php-mysql php-cli
 RUN apt-get install -y php-mbstring php-zip php-gd
-
 
 # sources 
 COPY ./srcs/mysql_setup.sql /var/
@@ -42,17 +39,19 @@ RUN chmod 755 -R *
 
 COPY ./srcs/wp-config.php /var/www/html/wordpress/wp-config.php
 COPY ./srcs/default /etc/nginx/sites-available/default
-RUN sed -i "s/XXXXX/autoindex $INDEX;/g" /etc/nginx/sites-available/default
 
+EXPOSE 80 443
+
+ENV INDEX on
+
+RUN sed -i "s/XXXXX/autoindex $INDEX;/g" /etc/nginx/sites-available/default
 CMD service nginx start ; \
     service php7.3-fpm start ; \
     service mysql start ; \
     sleep infinity & wait
 
-EXPOSE 80 443
-
 # POUR LANCER LE CONTAINER :
 # VERIFIER QUE RIEN NE TOURNE SUR LES PORTS 80 et 443, souvent c'est Nginx ou apache
 # systemctl stop nginx
-# docker build . -t eval_server:1
-# docker run -p 80:80 -p 443:443 -d eval_server:1
+# docker build . -t vo:1
+# docker run -p 80:80 -p 443:443 -d vo:1
