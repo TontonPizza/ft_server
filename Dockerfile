@@ -1,15 +1,3 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Dockerfile                                         :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: vo-nguye <vo-nguye@42.fr>                  +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2020/01/13 12:30:15 by vo-nguye          #+#    #+#              #
-#    Updated: 2020/01/21 03:39:57 by vo-nguye         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
 FROM debian:buster
 
 ENV INDEX on
@@ -26,14 +14,6 @@ RUN apt-get install -y mariadb-server mariadb-client
 RUN apt-get install -y php-fpm php-mysql php-cli
 RUN apt-get install -y php-mbstring php-zip php-gd
 
-# https://www.digitalocean.com/community/tutorials/how-to-install-linux-nginx-mysql-php-lemp-stack-on-debian-9
-# https://www.digitalocean.com/community/tutorials/how-to-install-phpmyadmin-from-source-debian-10
-# https://kifarunix.com/install-wordpress-5-with-nginx-on-debian-10-buster/amp/
-# https://websiteforstudents.com/install-wordpress-4-9-on-ubuntu-17-04-7-10-with-nginx-mariadb-and-php/
-# https://wordpress.org/support/article/how-to-install-wordpress/
-# RUN wget https://wordpress.org/latest.tar.gz
-# RUN mv latest.tar.gz wordpress.tar.gz && tar -zxvf wordpress.tar.gz && rm -rf wordress.tar.gz
-# https://www.shellhacks.com/create-csr-openssl-without-prompt-non-interactive/
 
 # sources 
 COPY ./srcs/mysql_setup.sql /var/
@@ -63,6 +43,7 @@ RUN chmod 755 -R *
 COPY ./srcs/wp-config.php /var/www/html/wordpress/wp-config.php
 COPY ./srcs/default /etc/nginx/sites-available/default
 RUN sed -i "s/XXXXX/autoindex $INDEX;/g" /etc/nginx/sites-available/default
+
 CMD service nginx start ; \
     service php7.3-fpm start ; \
     service mysql start ; \
@@ -75,19 +56,3 @@ EXPOSE 80 443
 # systemctl stop nginx
 # docker build . -t eval_server:1
 # docker run -p 80:80 -p 443:443 -d eval_server:1
-
-# POUR MODIFIER L INDEX :
-# docker exec -it ID_CONTAINER /bin/bash
-# et modifier le fichier index.html
-
-# NOTES POUR MOI MEME
-
-# docker image prune
-# docker container prune
-# docker exec it CONTAINER_ID bash
-# docker run --detach  :: Run container in background and print container id
-# docker run -p  80:80 -p 443:443 -d IMAGE_ID
-# docker stop container_id
-# ps
-# images
-# ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (2)
