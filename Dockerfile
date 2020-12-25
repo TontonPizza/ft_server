@@ -44,8 +44,9 @@ EXPOSE 80 443
 
 ENV INDEX on
 
-RUN sed -i "s/XXXXX/autoindex $INDEX;/g" /etc/nginx/sites-available/default
-CMD service nginx start ; \
+
+CMD sed -i "s/XXXXX/autoindex $INDEX;/g" /etc/nginx/sites-available/default ; \
+	service nginx start ; \
     service php7.3-fpm start ; \
     service mysql start ; \
     sleep infinity & wait
@@ -54,4 +55,4 @@ CMD service nginx start ; \
 # VERIFIER QUE RIEN NE TOURNE SUR LES PORTS 80 et 443, souvent c'est Nginx ou apache
 # systemctl stop nginx
 # docker build . -t vo:1
-# docker run -p 80:80 -p 443:443 -d vo:1
+# docker run --env INDEX=off -p 80:80 -p 443:443 -d vo:1
